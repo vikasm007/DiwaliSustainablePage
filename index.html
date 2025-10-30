@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diwali Sustainability Pledge</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #ffecd2, #fcb69f);
+      color: #4e342e;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    .form-box {
+      display: flex;
+      flex-direction: row;
+      gap: 30px;
+      width: 100%;
+      max-width: 1000px;
+      background: linear-gradient(to bottom right, #fff8e1, #ffe0b2);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(255, 87, 34, 0.3);
+      border: 3px solid #ff9800;
+    }
+    .pledge-section {
+      flex: 2;
+    }
+    .impact-section {
+      flex: 1;
+      background: #fffde7;
+      border: 2px solid #ffcc80;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 0 10px rgba(255, 193, 7, 0.3);
+    }
+    h2 {
+      text-align: center;
+      color: #d84315;
+      font-size: 1.8em;
+      margin-bottom: 15px;
+      text-shadow: 2px 2px 4px #ffcc80;
+    }
+    label, p {
+      font-weight: bold;
+      color: #6d4c41;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      border-radius: 5px;
+      border: 2px solid #ffb74d;
+      margin-top: 5px;
+    }
+    input[type="checkbox"] {
+      margin-right: 10px;
+    }
+    input[type="checkbox"]:hover {
+      transform: scale(1.1);
+    }
+    button {
+      background: linear-gradient(to right, #ff9800, #f57c00);
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background 0.3s ease;
+      margin-top: 10px;
+    }
+    button:hover {
+      background: linear-gradient(to right, #f57c00, #e65100);
+    }
+    .impact-section h3 {
+      margin-top: 0;
+      color: #388e3c;
+    }
+    .impact-section ul {
+      list-style-type: none;
+      padding-left: 0;
+    }
+    .impact-section li {
+      margin-bottom: 10px;
+      font-size: 1em;
+    }
+    .impact-section li span {
+      font-weight: bold;
+      color: #2e7d32;
+    }
+    .message {
+      margin-top: 20px;
+      font-size: 1.2em;
+      color: #d84315;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🌟 Diwali Sustainability Pledge 🪔</h2>
+    <form id="pledgeForm" class="form-box">
+      <div class="pledge-section">
+        <label for="firstName">🎉 First Name:</label><br />
+        <input type="text" id="firstName" name="firstName" required /><br /><br />
+        <p>🌱 Select your pledges:</p>
+        <input type="checkbox" name="pledge" value="clothBag" /> Use cloth bags instead of plastic 🛍️<br />
+        <input type="checkbox" name="pledge" value="publicTransport" /> Use public transport 🚌<br />
+        <input type="checkbox" name="pledge" value="ledLights" /> Switch to LED lighting 💡<br />
+        <input type="checkbox" name="pledge" value="recycleEwaste" /> Recycle e-waste ♻️<br />
+        <input type="checkbox" name="pledge" value="refillWater" /> Carry a refillable water bottle 🚰<br />
+        <input type="checkbox" name="pledge" value="plantTree" /> Plant and care for a tree 🌳<br />
+        <input type="checkbox" name="pledge" value="noFoodWaste" /> Avoid food waste 🍽️<br /><br />
+        <button type="submit">🚀 Submit</button>
+        <div class="message" id="diwaliMessage"></div>
+      </div>
+      <div class="impact-section">
+        <h3>🌍 Your Sustainable Impact Annually</h3>
+        <ul id="liveImpact">
+          <li>CO₂ Saved: <span>0 kg</span></li>
+          <li>Energy Saved: <span>0 kWh</span></li>
+          <li>Plastic Reduced: <span>0 items</span></li>
+          <li>Water Saved: <span>0 liters</span></li>
+          <li>Carbon Offset: <span>0 trees</span></li>
+        </ul>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const impactMetrics = {
+      clothBag: { co2: 5, energy: 2, plastic: 10, water: 0, trees: 0 },
+      publicTransport: { co2: 50, energy: 20, plastic: 0, water: 0, trees: 0 },
+      ledLights: { co2: 15, energy: 30, plastic: 0, water: 0, trees: 0 },
+      recycleEwaste: { co2: 10, energy: 5, plastic: 3, water: 0, trees: 0 },
+      refillWater: { co2: 2, energy: 1, plastic: 5, water: 50, trees: 0 },
+      plantTree: { co2: 25, energy: 0, plastic: 0, water: 0, trees: 1 },
+      noFoodWaste: { co2: 8, energy: 3, plastic: 0, water: 20, trees: 0 }
+    };
+
+    const checkboxes = document.querySelectorAll('input[name="pledge"]');
+    checkboxes.forEach(cb => cb.addEventListener('change', updateImpact));
+
+    function updateImpact() {
+      let totalCO2 = 0, totalEnergy = 0, totalPlastic = 0, totalWater = 0, totalTrees = 0;
+      const selected = Array.from(document.querySelectorAll('input[name="pledge"]:checked')).map(el => el.value);
+      selected.forEach(pledge => {
+        const impact = impactMetrics[pledge];
+        totalCO2 += impact.co2;
+        totalEnergy += impact.energy;
+        totalPlastic += impact.plastic;
+        totalWater += impact.water;
+        totalTrees += impact.trees;
+      });
+
+      document.getElementById('liveImpact').innerHTML = `
+        <li>CO₂ Saved: <span>${totalCO2} kg</span></li>
+        <li>Energy Saved: <span>${totalEnergy} kWh</span></li>
+        <li>Plastic Reduced: <span>${totalPlastic} items</span></li>
+        <li>Water Saved: <span>${totalWater} liters</span></li>
+        <li>Carbon Offset: <span>${totalTrees} trees</span></li>
+      `;
+    }
+
+    document.getElementById('pledgeForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const name = document.getElementById('firstName').value;
+      const message = document.getElementById('diwaliMessage');
+      message.textContent = `🎆 Happy Diwali, ${name}! Thank you for being a sustainability superhero! 🌍🪔`;
+      setTimeout(() => {
+        message.textContent = '';
+        document.getElementById('pledgeForm').reset();
+        updateImpact();
+      }, 30000);
+    });
+  </script>
+</body>
+</html>
